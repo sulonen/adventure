@@ -1,0 +1,10 @@
+@import url(//fonts.googleapis.com/css?family=Source+Code+Pro:500,700);
+
+body {
+  margin: 40px;
+  background: black;
+  color: green;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 14px;
+}
+
