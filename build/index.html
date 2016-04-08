@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html ng-app>
+<html data-ng-app="Adventure">
   <head>
     <meta charset="utf-8">
     <title>Adventure!</title>
   </head>
   <body>
-    <section id="game">
-    <h1>Testing</h1>
-
+    <section id="game" data-ng-controller="GameController as game">
+      <h1>{{text}}</h1>
+      <input name="input" data-ng-model="input">
+      <input type="button" ng-click="handleInput()" value="Go!">
 
     </section>
     <script src="./bundle.js"></script>
-    <script src="./grid.js"></script>
-    <script src="./character.js"></script>
     <script src="./game.js"></script>
   </body>
 </html>
