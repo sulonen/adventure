@@ -1,3 +1,4 @@
 require('./css/main.css');
-require('./bower_components/angular/angular.min.js');
+require('./node_modules/angular/angular.min.js');
+require('./app/app.js');
 
