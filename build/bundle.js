@@ -46,7 +46,6 @@
 
 	__webpack_require__(1);
 	__webpack_require__(5);
-	__webpack_require__(6);
 
 
 
@@ -713,95 +712,6 @@
 	6],fullDate:"EEEE, MMMM d, y",longDate:"MMMM d, y",medium:"MMM d, y h:mm:ss a",mediumDate:"MMM d, y",mediumTime:"h:mm:ss a","short":"M/d/yy h:mm a",shortDate:"M/d/yy",shortTime:"h:mm a"},NUMBER_FORMATS:{CURRENCY_SYM:"$",DECIMAL_SEP:".",GROUP_SEP:",",PATTERNS:[{gSize:3,lgSize:3,maxFrac:3,minFrac:0,minInt:1,negPre:"-",negSuf:"",posPre:"",posSuf:""},{gSize:3,lgSize:3,maxFrac:2,minFrac:2,minInt:1,negPre:"-\u00a4",negSuf:"",posPre:"\u00a4",posSuf:""}]},id:"en-us",localeID:"en_US",pluralCat:function(a,
 	c){var e=a|0,f=c;u===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0==f?"one":"other"}})}]),H(P).ready(function(){de(P,yc)}))})(window,document);!window.angular.$$csp().noInlineStyle&&window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 	//# sourceMappingURL=angular.min.js.map
-
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	function Grid(horizontal, vertical, fill) {
-	  this.horizontal = horizontal;
-	  this.vertical = vertical;
-	  this.fill = fill;
-	  this.grid = [];
-	}
-
-	Grid.prototype.createGrid = function() {
-	  for (var i = 0; i < this.horizontal; i++) {
-	    this.grid[i] = [];
-	    for (var j = 0; j < this.vertical; j++) {
-	      this.grid[i][j] = this.fill;
-	    }
-	  }
-	  console.log(this.grid);
-	};
-
-	Grid.prototype.placeItems = function(items) {
-	  var horizontal = this.horizontal;
-	  var vertical = this.vertical;
-	  var fill = this.fill;
-	  items.forEach(function(item) {
-	    var hPosition, vPosition;
-	    
-	    function position(horizontal, vertical) {
-	      hPosition = Math.floor(Math.random() * horizontal);
-	      vPosition = Math.floor(Math.random() * vertical);
-	    }
-
-	    position(horizontal, vertical);
-	    
-	    if (grid[hPosition][vPosition] != fill) {
-	      position(horizontal, vertical); 
-	    } else {
-	      grid[hPosition][vPosition] = item;
-	    }
-	  });
-	};
-
-	function Character(hitpoints) {
-	  this.hitpoints = hitpoints;
-	}
-
-	function Monster(name, attack) {
-	  Character.call(this, 1);
-	  this.name = name;
-	  this.attack = attack;
-	}
-
-	function Player(name) {
-	  Character.call(this, 1);
-	  this.name = name;
-	  this.friend = [];
-	  this.carrying = ['A flashlight with no batteries'];
-	}
-
-	Monster.prototype.attack = function(player) {
-	  player.hitpoints -= 1;
-	};
-
-	Monster.prototype.friend = function(player) {
-	  player.friend.push(this.name);
-	};
-
-	Player.prototype.get = function(item) {
-	  this.carrying.push(item);
-	};
-
-	Player.prototype.give = function(item) {
-	  let index = this.carrying.indexOf(item);
-	  if (index) this.carrying.splice(index, 1);
-	};
-
-	let grid = new Grid(5, 4, '.');
-	grid.createGrid();
-
-	let monster = new Monster('The Dread Finnegan', 'Cry');
-	let player = new Player('You');
-
-	grid.placeItems([monster, player, 'Tasty Treats']);
-
 
 
 /***/ }
