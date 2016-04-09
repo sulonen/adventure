@@ -3,8 +3,18 @@
 body {
   margin: 40px;
   background: black;
-  color: green;
+  color: limegreen;
   font-family: 'Source Code Pro', monospace;
   font-size: 14px;
+}
+
+.input {
+  background: lightyellow;
+}
+
+.button {
+  font-weight: bold;
+  background: green;
+  border-radius: 5px;
 }
 
