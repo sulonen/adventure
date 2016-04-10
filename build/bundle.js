@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	__webpack_require__(6);
+	__webpack_require__(5);
 
 
 
@@ -398,24 +398,28 @@
 
 
 /***/ },
-/* 5 */,
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	const angular = __webpack_require__(7);
-	const Grid = __webpack_require__(9).Grid;
-	const character = __webpack_require__(10);
+	const angular = __webpack_require__(6);
+	const Grid = __webpack_require__(8).Grid;
+	const Thing = __webpack_require__(9).Thing;
+	const move = __webpack_require__(10);
+	const character = __webpack_require__(11);
 	const Player = character.Player;
 	const Monster = character.Monster;
-	const moves = __webpack_require__(11);
 
 	var app = angular.module('Adventure', []);
 
 	app.controller('GameController', ['$scope', function($scope) {
+	  var grid;
 	  var player;
-	  var clock = 30; 
+	  var monster;
+	  var treats;
+	  var clock = 30;
+	  
 	  $scope.text = 'Welcome, Adventurer! What is your name?';
 	  $scope.input = 'Enter your name';
 
@@ -434,63 +438,138 @@
 
 	    function west() {
 	      clock--;
-	      console.log('west');
+	      if (player.position[0] - 1 < 0) {
+	        $scope.text = player.name + ', you\'ve run into a wall.';
+	      } else {
+	        player.position[0]--;
+	        if (typeof(grid.grid[player.position[0]][player.position[1]][0]) !== 'string') {
+	          $scope.text = 'You almost stepped on '
+	            + grid.grid[player.position[0]][player.position[1]][0].name + '!';
+	        } else {
+	          $scope.text = player.name + ', you are in a filthy, abandoned office space.';
+	        }    
+	      }
 	    }
 
 	    function east() {
 	      clock--;
-	      console.log('east');
+	      if (player.position[0] + 1 >= grid.grid.length) {
+	        $scope.text = player.name + ', you\'ve run into a wall.';
+	      } else {
+	        player.position[0]++;
+	        if (typeof(grid.grid[player.position[0]][player.position[1]][0]) !== 'string') {
+	          $scope.text = 'You almost stepped on '
+	            + grid.grid[player.position[0]][player.position[1]][0].name + '!';
+	        } else {
+	          $scope.text = player.name + ', you are in a filthy, abandoned office space.';
+	        }    
+	      }
 	    }
 
 	    function north() {
 	      clock--;
-	      console.log('north');
+	      if (player.position[1] - 1 < 0) {
+	        $scope.text = player.name + ', you\'ve run into a wall.';
+	      } else {
+	        player.position[1]--;
+	        if (typeof(grid.grid[player.position[0]][player.position[1]][0]) !== 'string') {
+	          $scope.text = 'You almost stepped on '
+	            + grid.grid[player.position[0]][player.position[1]][0].name + '!';
+	        } else {
+	          $scope.text = player.name + ', you are in a filthy, abandoned office space.';
+	        }    
+	      }
 	    }
 
 	    function south() {
 	      clock--;
-	      console.log('south');
+	      if (player.position[1] + 1 >= grid.grid[0].length) {
+	        $scope.text = player.name + ', you\'ve run into a wall.';
+	      } else {
+	        player.position[1]++;
+	        if (typeof(grid.grid[player.position[0]][player.position[1]][0]) !== 'string') {
+	          $scope.text = 'You almost stepped on '
+	            + grid.grid[player.position[0]][player.position[1]][0].name + '!';
+	        } else {
+	          $scope.text = player.name + ', you are in a filthy, abandoned office space.';
+	        }    
+	      }
 	    }
 
 	    if (typeof(player) == 'undefined') {
-	      let grid = new Grid(5, 4, '.');
+	      grid = new Grid(5, 4, '.');
 	      player = new Player($scope.input);
-	      let monster = new Monster('The Dread Finnegan', 'Cries Piteously');
+	      player.position = [0, 0];
+	      treats = new Thing('Tasty Treats');
+	      monster = new Monster('The Dread Finnegan', 'Cries Piteously');
 
 	      grid.createGrid();
-	      grid.placeItems([monster, player, 'Tasty Treats']);
+	      grid.placeItems([monster, treats]);
 
-	      console.log(player);
-
-	      console.log(grid);
+	      console.log(grid.grid);
 
 	      $scope.text = 'Hello, ' + player.name
 	        + '. You find yourself in a filthy abandoned office space.'
 	        + ' It is dark.'
 	        + ' You are carrying: ' + carrying(player) + '.';
+	      $scope.input = '?';
+
+	      grid.grid[player.position[0]][player.position[1]][0] = '.';
 	    } else {
 	      if (clock <= 0) {
 	        player.hitpoints = 0;
 	        $scope.text = player.name + ', you lose. '
 	          + player.name + ' has died of boredom.';
 	      } else {
-	        if ($scope.input.match(moves.west)) {
-	          west();  
-	        } else if ($scope.input.match(moves.east)) {
+	        if ($scope.input.match(move.west)) {
+	          west();
+	          console.log(player.position); 
+	        } else if ($scope.input.match(move.east)) {
 	          east();
-	        } else if ($scope.input.match(moves.north)) {
+	          console.log(player.position);
+	        } else if ($scope.input.match(move.north)) {
 	          north();
-	        } else if ($scope.input.match(moves.south)) {
+	          console.log(player.position);
+	        } else if ($scope.input.match(move.south)) {
 	          south();
-
-
+	          console.log(player.position);
+	        } else if ($scope.input.match(move.get)) {
+	          if (typeof(grid.grid[player.position[0]][player.position[1]][0]) == 'object') {
+	            clock--;
+	            player.carrying.push(grid.grid[player.position[0]][player.position[1]][0]);
+	            grid.grid[player.position[0]][player.position[1]][0] = '.';
+	            $scope.text = 'You picked up ' + player.carrying[1].name + '!';
+	          } else {
+	            clock--;
+	            $scope.text = 'There is nothing here to pick up.';
+	          }
+	        } else if ($scope.input.match(move.give)) {
+	          if (typeof(grid.grid[player.position[0]][player.position[1]][0]) == 'object') {
+	            if (player.carrying.length > 1) {
+	              player.carrying.pop();
+	              monster.friend(player);
+	              $scope.text = player.name + ', you give the noms to ' + monster.name
+	                + '! You have a new friend! You win!';
+	            } else {
+	              $scope.text = monster.name + ' ' + monster.attack + '! '
+	                + player.name + ' dies of shame and sadness. You lose.';
+	            }
+	          } else {
+	            if (player.carrying.length > 1) {
+	              clock--;
+	              $scope.text = 'Hmm. Who should we give these delicious noms to?';
+	            } else {
+	              clock--;
+	              $scope.text = 'Really? You know that doesn\'t have batteries in it don\'t you?';
+	            }
+	          }
 	        } else {
+	          clock--;
 	          $scope.text = player.name + ', you\'re drunk.'
 	            + ' What do you really want to do?';
 	        }
 	      }
 	    }
-
 	  };
 
 	}]);
@@ -498,15 +577,15 @@
 
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(8);
+	__webpack_require__(7);
 	module.exports = angular;
 
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	/**
@@ -31225,7 +31304,7 @@
 	!window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31241,7 +31320,7 @@
 	  for (var i = 0; i < this.horizontal; i++) {
 	    this.grid[i] = [];
 	    for (var j = 0; j < this.vertical; j++) {
-	      this.grid[i][j] = this.fill;
+	      this.grid[i][j] = [this.fill];
 	    }
 	  }
 	};
@@ -31264,11 +31343,11 @@
 	    if (grid[hPosition][vPosition] != fill) {
 	      position(horizontal, vertical); 
 	    } else {
-	      if (item.__proto__.constructor.name == 'Player'
-	          || item.__proto__.constructor.name =='Monster') {
+	      if (item.__proto__.constructor.name == 'Monster'
+	          || item.__proto__.constructor.name == 'Thing') {
 	        item.position = [hPosition, vPosition];
 	      }
-	      grid[hPosition][vPosition] = item;
+	      grid[hPosition][vPosition] = [item];
 	    }
 	  });
 	};
@@ -31278,14 +31357,47 @@
 
 
 /***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	function Thing(name) {
+	  this.name = name;
+	}
+
+	module.exports.Thing = Thing;
+
+
+
+/***/ },
 /* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
 
+	module.exports = {
+	  west: new RegExp(/.*west.*|^a$/, 'i'),
+	  east: new RegExp(/.*east.*|^d$/, 'i'),
+	  north: new RegExp(/.*north.*|^w$/, 'i'),
+	  south: new RegExp(/.*south.*|^s$/, 'i'),
+	  get: new RegExp(/.*get.*|.*pick.*/, 'i'),
+	  give: new RegExp(/.*give.*|.*use.*|.*drop.*/, 'i')
+	};
+
+	  
+
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	'use strict';
+
 	function Character(hitpoints) {
-	    this.hitpoints = hitpoints;
-	    this.position = [];
+	  this.hitpoints = hitpoints;
+	  this.position = [];
 	}
 
 	function Monster(name, attack) {
@@ -31300,10 +31412,6 @@
 	  this.friend = [];
 	  this.carrying = ['A flashlight with no batteries'];
 	}
-
-	Monster.prototype.attack = function(player) {
-	  player.hitpoints -= 1;
-	};
 
 	Monster.prototype.friend = function(player) {
 	  player.friend.push(this.name);
@@ -31321,23 +31429,6 @@
 	module.exports.Character = Character;
 	module.exports.Monster = Monster;
 	module.exports.Player = Player;
-
-
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = {
-	  west: new RegExp(/.*west.*/, 'i'),
-	  east: new RegExp(/.*east.*/, 'i'),
-	  north: new RegExp(/.*north.*/, 'i'),
-	  south: new RegExp(/.*south.*/, 'i')
-	};
-
-	  
 
 
 

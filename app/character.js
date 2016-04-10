@@ -1,8 +1,8 @@
 'use strict';
 
 function Character(hitpoints) {
-    this.hitpoints = hitpoints;
-    this.position = [];
+  this.hitpoints = hitpoints;
+  this.position = [];
 }
 
 function Monster(name, attack) {
@@ -17,10 +17,6 @@ function Player(name) {
   this.friend = [];
   this.carrying = ['A flashlight with no batteries'];
 }
-
-Monster.prototype.attack = function(player) {
-  player.hitpoints -= 1;
-};
 
 Monster.prototype.friend = function(player) {
   player.friend.push(this.name);

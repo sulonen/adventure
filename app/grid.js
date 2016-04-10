@@ -11,7 +11,7 @@ Grid.prototype.createGrid = function() {
   for (var i = 0; i < this.horizontal; i++) {
     this.grid[i] = [];
     for (var j = 0; j < this.vertical; j++) {
-      this.grid[i][j] = this.fill;
+      this.grid[i][j] = [this.fill];
     }
   }
 };
@@ -34,11 +34,11 @@ Grid.prototype.placeItems = function(items) {
     if (grid[hPosition][vPosition] != fill) {
       position(horizontal, vertical); 
     } else {
-      if (item.__proto__.constructor.name == 'Player'
-          || item.__proto__.constructor.name =='Monster') {
+      if (item.__proto__.constructor.name == 'Monster'
+          || item.__proto__.constructor.name == 'Thing') {
         item.position = [hPosition, vPosition];
       }
-      grid[hPosition][vPosition] = item;
+      grid[hPosition][vPosition] = [item];
     }
   });
 };
