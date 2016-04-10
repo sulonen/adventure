@@ -92,6 +92,40 @@ app.controller('GameController', ['$scope', function($scope) {
         }    
       }
     }
+    
+    function get() {
+      if (typeof(grid.grid[player.position[0]][player.position[1]][0]) == 'object') {
+        clock--;
+        player.carrying.push(grid.grid[player.position[0]][player.position[1]][0]);
+        grid.grid[player.position[0]][player.position[1]][0] = '.';
+        $scope.text = 'You picked up ' + player.carrying[1].name + '!';
+      } else {
+        clock--;
+        $scope.text = 'There is nothing here to pick up.';
+      }
+    }
+
+    function give() {
+      if (typeof(grid.grid[player.position[0]][player.position[1]][0]) == 'object') {
+        if (player.carrying.length > 1) {
+          player.carrying.pop();
+          monster.friend(player);
+          $scope.text = player.name + ', you give the noms to ' + monster.name
+            + '! You have a new friend! You win!';
+        } else {
+          $scope.text = monster.name + ' ' + monster.attack + '! '
+            + player.name + ' dies of shame and sadness. You lose.';
+        }
+      } else {
+        if (player.carrying.length > 1) {
+          clock--;
+          $scope.text = 'Hmm. Who should we give these delicious noms to?';
+        } else {
+          clock--;
+          $scope.text = 'Really? You know that doesn\'t have batteries in it don\'t you?';
+        }
+      }
+    }
 
     if (typeof(player) == 'undefined') {
       grid = new Grid(5, 4, '.');
@@ -102,8 +136,6 @@ app.controller('GameController', ['$scope', function($scope) {
 
       grid.createGrid();
       grid.placeItems([monster, treats]);
-
-      console.log(grid.grid);
 
       $scope.text = 'Hello, ' + player.name
         + '. You find yourself in a filthy abandoned office space.'
@@ -120,46 +152,16 @@ app.controller('GameController', ['$scope', function($scope) {
       } else {
         if ($scope.input.match(move.west)) {
           west();
-          console.log(player.position); 
         } else if ($scope.input.match(move.east)) {
           east();
-          console.log(player.position);
         } else if ($scope.input.match(move.north)) {
           north();
-          console.log(player.position);
         } else if ($scope.input.match(move.south)) {
           south();
-          console.log(player.position);
         } else if ($scope.input.match(move.get)) {
-          if (typeof(grid.grid[player.position[0]][player.position[1]][0]) == 'object') {
-            clock--;
-            player.carrying.push(grid.grid[player.position[0]][player.position[1]][0]);
-            grid.grid[player.position[0]][player.position[1]][0] = '.';
-            $scope.text = 'You picked up ' + player.carrying[1].name + '!';
-          } else {
-            clock--;
-            $scope.text = 'There is nothing here to pick up.';
-          }
+          get();
         } else if ($scope.input.match(move.give)) {
-          if (typeof(grid.grid[player.position[0]][player.position[1]][0]) == 'object') {
-            if (player.carrying.length > 1) {
-              player.carrying.pop();
-              monster.friend(player);
-              $scope.text = player.name + ', you give the noms to ' + monster.name
-                + '! You have a new friend! You win!';
-            } else {
-              $scope.text = monster.name + ' ' + monster.attack + '! '
-                + player.name + ' dies of shame and sadness. You lose.';
-            }
-          } else {
-            if (player.carrying.length > 1) {
-              clock--;
-              $scope.text = 'Hmm. Who should we give these delicious noms to?';
-            } else {
-              clock--;
-              $scope.text = 'Really? You know that doesn\'t have batteries in it don\'t you?';
-            }
-          }
+          give();
         } else {
           clock--;
           $scope.text = player.name + ', you\'re drunk.'

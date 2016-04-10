@@ -1,3 +1,3 @@
 require('./css/main.css');
-require('./app/app.js');
+require('./app-proto/app.js');
 
