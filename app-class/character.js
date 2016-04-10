@@ -1,35 +1,40 @@
 'use strict';
 
-function Character(hitpoints) {
-  this.hitpoints = hitpoints;
-  this.position = [];
+class Character {
+  constructor(hitpoints) {
+    this.hitpoints = hitpoints;
+  }
 }
 
-function Monster(name, attack) {
-  Character.call(this, 1);
-  this.name = name;
-  this.attack = attack;
+class Monster extends Character {
+  constructor(name, attack) {
+    super(1);
+    this.name = name;
+    this.attack = attack;
+  }
+
+  friend(player) {
+    player.friend.push(this.name);
+  }
 }
 
-function Player(name) {
-  Character.call(this, 1);
-  this.name = name;
-  this.friend = [];
-  this.carrying = ['A flashlight with no batteries'];
+class Player extends Character {
+  constructor(name) {
+    super(1);
+    this.name = name;
+    this.friend = [];
+    this.carrying = ['A flashlight with no batteries'];
+  }
+
+  get(item) {
+    this.carrying.push(item);
+  }
+
+  give(item) {
+    let index = this.carrying.indexOf(item);
+    if (index) this.carrying.splice(index, 1);
+  }
 }
-
-Monster.prototype.friend = function(player) {
-  player.friend.push(this.name);
-};
-
-Player.prototype.get = function(item) {
-  this.carrying.push(item);
-};
-
-Player.prototype.give = function(item) {
-  let index = this.carrying.indexOf(item);
-  if (index) this.carrying.splice(index, 1);
-};
 
 module.exports.Character = Character;
 module.exports.Monster = Monster;
