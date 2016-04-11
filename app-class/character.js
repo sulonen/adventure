@@ -23,7 +23,6 @@ class Player extends Character {
     super(1);
     this.name = name;
     this.friend = [];
-    this.carrying = ['A flashlight with no batteries'];
   }
 
   get(item) {
@@ -36,7 +35,25 @@ class Player extends Character {
   }
 }
 
+class Warrior extends Player {
+  constructor(name) {
+    super(name);
+    this.carrying = ['A flashlight with no batteries'];
+    this.class = 'Warrior';
+  }
+}
+
+class Archer extends Player {
+  constructor(name) {
+    super(name);
+    this.carrying = ['A broken slinky'];
+    this.class = 'Archer';
+  }
+}
+
 module.exports.Character = Character;
 module.exports.Monster = Monster;
 module.exports.Player = Player;
+module.exports.Warrior = Warrior;
+module.exports.Archer = Archer;
 

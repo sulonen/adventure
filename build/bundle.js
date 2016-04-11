@@ -408,7 +408,8 @@
 	const Thing = __webpack_require__(9).Thing;
 	const move = __webpack_require__(10);
 	const character = __webpack_require__(11);
-	const Player = character.Player;
+	const Warrior = character.Warrior;
+	const Archer = character.Archer;
 	const Monster = character.Monster;
 
 	var app = angular.module('Adventure', []);
@@ -416,12 +417,13 @@
 	app.controller('GameController', ['$scope', function($scope) {
 	  var grid;
 	  var player;
+	  var playerClass = null;
 	  var monster;
 	  var treats;
 	  var clock = 30;
 	  
-	  $scope.text = 'Welcome, Adventurer! What is your name?';
-	  $scope.input = 'Enter your name';
+	  $scope.text = 'Welcome, Adventurer! Would you like to be a warrior or an archer?';
+	  $scope.input = 'Enter your class';
 
 	  $scope.handleInput = function() {
 	    function carrying(character) {
@@ -525,14 +527,16 @@
 	          $scope.text = 'Hmm. Who should we give these delicious noms to?';
 	        } else {
 	          clock--;
-	          $scope.text = 'Really? You know that doesn\'t have batteries in it don\'t you?';
+	          if (player.class == 'Warrior') {
+	            $scope.text = 'You know that doesn\'t have batteries in it, right?';
+	          } else {
+	            $scope.text = 'You wave your slinky about ineffectually.';
+	          }
 	        }
 	      }
 	    }
 
-	    if (typeof(player) == 'undefined') {
-	      grid = new Grid(5, 4, '.');
-	      player = new Player($scope.input);
+	    function entry() {
 	      player.position = [0, 0];
 	      treats = new Thing('Tasty Treats');
 	      monster = new Monster('The Dread Finnegan', 'Cries Piteously');
@@ -547,13 +551,36 @@
 	      $scope.input = '?';
 
 	      grid.grid[player.position[0]][player.position[1]][0] = '.';
+	    }
+
+	    if (typeof(player) == 'undefined' && playerClass == null) {
+	      grid = new Grid(5, 4, '.');
+	      if ($scope.input.match(move.warrior)) {
+	        playerClass = 'Warrior';
+	        $scope.text = 'Fine. You\'re a warrior. What\'s your name?';
+	        $scope.input = 'Enter your name';
+	      } else if ($scope.input.match(move.archer)) {
+	        playerClass = 'Archer';
+	        $scope.text = 'Fine. You\'re an archer. What\'s your name?';
+	        $scope.input = 'Enter your name';
+	      } else {
+	        $scope.text = 'An unknown heroic individual has died of boredom. You lose.';
+	      }
 	    } else {
 	      if (clock <= 0) {
 	        player.hitpoints = 0;
 	        $scope.text = player.name + ', you lose. '
 	          + player.name + ' has died of boredom.';
 	      } else {
-	        if ($scope.input.match(move.west)) {
+	        if (typeof(player) == 'undefined' && playerClass == 'Warrior') {
+	          player = new Warrior($scope.input);
+	          console.log(player);
+	          entry();
+	        } else if (typeof(player) == 'undefined' && playerClass == 'Archer') {
+	          player = new Archer($scope.input);
+	          console.log(player);
+	          entry();
+	        } else if ($scope.input.match(move.west)) {
 	          west();
 	        } else if ($scope.input.match(move.east)) {
 	          east();
@@ -31388,7 +31415,9 @@
 	  north: new RegExp(/.*north.*|^w$/, 'i'),
 	  south: new RegExp(/.*south.*|^s$/, 'i'),
 	  get: new RegExp(/.*get.*|.*pick.*/, 'i'),
-	  give: new RegExp(/.*give.*|.*use.*|.*drop.*/, 'i')
+	  give: new RegExp(/.*give.*|.*use.*|.*drop.*/, 'i'),
+	  warrior: new RegExp(/.*war.*/, 'i'),
+	  archer: new RegExp(/.*arch.*/, 'i')
 	};
 
 	  
@@ -31424,7 +31453,6 @@
 	    super(1);
 	    this.name = name;
 	    this.friend = [];
-	    this.carrying = ['A flashlight with no batteries'];
 	  }
 
 	  get(item) {
@@ -31437,9 +31465,27 @@
 	  }
 	}
 
+	class Warrior extends Player {
+	  constructor(name) {
+	    super(name);
+	    this.carrying = ['A flashlight with no batteries'];
+	    this.class = 'Warrior';
+	  }
+	}
+
+	class Archer extends Player {
+	  constructor(name) {
+	    super(name);
+	    this.carrying = ['A broken slinky'];
+	    this.class = 'Archer';
+	  }
+	}
+
 	module.exports.Character = Character;
 	module.exports.Monster = Monster;
 	module.exports.Player = Player;
+	module.exports.Warrior = Warrior;
+	module.exports.Archer = Archer;
 
 
 

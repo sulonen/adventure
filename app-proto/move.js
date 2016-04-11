@@ -6,7 +6,9 @@ module.exports = {
   north: new RegExp(/.*north.*|^w$/, 'i'),
   south: new RegExp(/.*south.*|^s$/, 'i'),
   get: new RegExp(/.*get.*|.*pick.*/, 'i'),
-  give: new RegExp(/.*give.*|.*use.*|.*drop.*/, 'i')
+  give: new RegExp(/.*give.*|.*use.*|.*drop.*/, 'i'),
+  warrior: new RegExp(/.*war.*/, 'i'),
+  archer: new RegExp(/.*arch.*/, 'i')
 };
 
   
